@@ -23,6 +23,12 @@ git add .             -- preparar los archivos para hacer seguimiento
 
 git reset archivo     -- saca al archivo del stage
 
+git clean -n          -- para ver una prueba de la ejecucion
+git clean -f          -- para forzar la eliminación de archivos sin seguimiento
+git clean -f -d       -- para forzar la eliminación de directorios sin seguimiento;
+git clean -f -x       -- para eliminar el sin seguimiento a . gitignore ficheros y .
+Add the -i switch to do an interactive 'git clean'.
+
 git commit -m "nombre del commit"  -- hace foto de nuestro seguimiento
 
 git log                  -- resumen de lo que has hecho
@@ -76,9 +82,12 @@ git commit --amend               -- para revertir ultimo cambio y modificar algo
 git reflog                    -- historico de git
 y luego git reset --hard "numeroHash"     -- para recuperar a lo que querias
 
+git restore --staged       --recupera el archivo del staged
+
 git mv destruir-mundo.md salvar-mundo.md
 
 git rm salvar-mundo.md        --borrar archivo
+git rm .env --cached          --borrar archivo del repositorio
 
 git reset --hard             --recupera archivo despues de borrarlo paso anterior
 
@@ -97,8 +106,9 @@ tags - etiquetas, son una referencia a un commit en el tiempo.
 
 git tag version-final   -- crea etiqueta
 git tag -d nombre       -- borra etiqueta
-git tag -a v1.0 -m "Version 1.0"   -- crea version de tag de donde estas
+git tag -a v1.0 -m "Version 1.0"   -- crea version de tag de donde estas. Crea una version final.
 git tag -a v0.1 numeroHash -m "Version 0.1 alfa"  --crea version a partir de un hash en concreto
+git push --tags         -- sube los tags
 
 ------- stash y rebase ------
 
@@ -256,3 +266,36 @@ git config --global -e
 [alias]
         s = status --short --branch
         lg = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
+
+
+------ Borrar un commit 
+---si NO hemos subido el commit a nuestro repositorio remoto (no hemos realizado push), lo podemos hacer de 2 formas: 
+
+1) git reset --hard HEAD~1     
+                               --head: Con esta opción estamos indicando que retrocedemos a el comit HEAD~1 y perdemos todas 
+                               -- las confirmaciones posteriores. HEAD~1 es un atajo para apuntar al commit anterior al que nos encontramos. 
+                               -- CUIDADO, con la opcion –head, ya que como he dicho se borran todos los commits posteriores al commit 
+                               -- al que indicamos.
+2) git reset --soft HEAD~1     ---
+                               --soft: con esta opción estamos indicando que retrocedemos a el commit HEAD~1 y no perdemos 
+                               --los cambios de los commits posteriores. Todos los cambios aparecerán como pendientes para realizar un commit.
+
+--- Solución si hemos subido el commit a nuestro repositorio remoto (hemos realizado push):
+--En caso de que queramos borrar un commit que ya hemos subido al servidor remoto, la mejor opcion es realizar un nuevo commit 
+-- que borre el commit que queremos eliminar utilizando el comando revert.
+
+1) git revert HEAD
+
+
+----------------- Hacer que te pida usuario nuevamente --------------
+git config --system --unset credential.helper    --- inicio de sesion en github al cambiar clave
+
+git config --global credential.helper wincred    --- para que no te vuelva a pedir datos identificacion
+
+
+----------- git fetch -------------
+git fetch --all
+Una función potente que recupera todos los repositorios remotos registrados y sus ramas:
+
+git fetch --dry-run
+La opción --dry-run ejecutará una demo del comando. Genera ejemplos de acciones que realizará durante la recuperación, pero no los aplica.
