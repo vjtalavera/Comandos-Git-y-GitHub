@@ -2,7 +2,6 @@
 
 https://tecnologiasplexus.udemy.com/course/git-github/learn/lecture/7340564?start=0#overview
 
-
 ------------------ Git ----------------
 
 git help                -- ayuda
@@ -299,3 +298,65 @@ Una función potente que recupera todos los repositorios remotos registrados y s
 
 git fetch --dry-run
 La opción --dry-run ejecutará una demo del comando. Genera ejemplos de acciones que realizará durante la recuperación, pero no los aplica.
+
+
+
+****** Archivos modificados en el área de trabajo  ************
+1. Si cambiamos uno o varios archivos, pero no hemos hecho commit de dichos cambios podemos hacer:
+
+git checkout -- ruta-archivo
+y de esta manera, descarta todo cambio realizado en el archivo en el área de trabajo, es decir, que éste queda restablecido hasta HEAD (el último commit realizado).
+
+2. Si cometimos el error de agregar al índice un archivo, haciendo git add ruta-archivo, realizando:
+
+git reset ruta-archivo
+Podemos devolverlo al área de trabajo sin borrar los cambios permanentemente, es decir, git reset ruta-archivo es lo contrario de git add ruta-archivo.  
+Si quieres devolver todos los archivos del índice se puede usar simplemente git reset
+
+
+*******  Cambiar el último commit ******
+Si acabamos de hacer commit de unos cambios pero olvidamos incluir un archivo, podemos agregar dicho archivo (o todos los que se te hayan olvidado) al índice con:
+
+git add ruta-archivo
+y ahora usamos el comando git commit --amend, con el cual git toma los archivos que se encuentren en el índice para reescribir el commit, de esta manera:
+
+git commit --amend -m "mensaje del commit"
+Con ello, estaríamos modificando el anterior commit realizado para agregar el archivo faltante. Este comando también es útil cuando queremos modificar el mensaje del commit, con el cual podemos hacer:
+
+git commit --amend -m "Nuevo mensaje del commit"
+Así, los cambios realizados serán los mismos pero lo único que cambia es el mensaje del commit.
+
+
+*********** Deshacer otros commits **************
+Mientras estemos en una rama local, es decir, no se han subido los cambios a una remota, podemos deshacer un commit de las siguientes maneras:
+
+git reset --hard HEAD~1
+Este comando eliminará el commit y sus cambios se perderán por completo, es decir, has esto cuando ya no te importe los cambios que se hayan hecho en él.
+
+En cambio, si quieres deshacer un commit, pero deseas mantener los cambios:
+
+git reset --soft HEAD~1
+Este comando eliminará el commit pero todos los cambios de él se pasarán al índice, es decir, justo antes de hacer commit y después de hacer git add.
+
+Ahora, si lo que quieres es pasar todos los cambios hechos al área de trabajo:
+
+git reset HEAD~1
+HEAD~1 significa que retroceda en una posición con respecto al último commit. En caso de querer retroceder más, simplemente cambia el número por la cantidad de posiciones 
+que se desea retroceder.
+
+
+
+***************** Deshacer un commit público *****************
+En caso de que queramos borrar un commit que ya hemos subido a una rama remota no podemos hacer git reset sino que debemos usar el siguiente comando:
+
+git revert HEAD
+Éste deshace un commit pero en vez de eliminarlo de la historia del repositorio, generará un nuevo commit que deshace todos los cambios introducidos en el commit 
+que se desea eliminar. 
+Esto para evitar conflictos con cualquier otra persona que trabaje en el repositorio. 
+Pues de esta forma, los cambios deshechos se obtienen como cualquier otro commit haciendo git pull.
+
+Otra ventaja que tiene git revert con respecto a git  reset es que se puede deshacer un commit en particular sin tener que eliminar los commit que ocurrieron 
+después del commit deseado, haciendo:
+
+git revert <commit>
+donde commit es el hash SHA-1 que lo identifica, el cual se puede obtener haciendo git log y buscando el commit a eliminar.
