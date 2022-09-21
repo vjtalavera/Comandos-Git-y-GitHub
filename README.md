@@ -463,4 +463,12 @@ Para ver las relaciones de ramas
 
 git branch -vv
 
+------------------------------ comandos para ver estados
+
+git fetch -v
+git branch -vv
+git remote show origin
+git pull -v
+
+------------------------------
 
