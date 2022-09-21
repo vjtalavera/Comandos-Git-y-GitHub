@@ -300,7 +300,6 @@ git fetch --dry-run
 La opción --dry-run ejecutará una demo del comando. Genera ejemplos de acciones que realizará durante la recuperación, pero no los aplica.
 
 
-
 ****** Archivos modificados en el área de trabajo  ************
 1. Si cambiamos uno o varios archivos, pero no hemos hecho commit de dichos cambios podemos hacer:
 
@@ -341,9 +340,7 @@ Este comando eliminará el commit pero todos los cambios de él se pasarán al �
 Ahora, si lo que quieres es pasar todos los cambios hechos al área de trabajo:
 
 git reset HEAD~1
-HEAD~1 significa que retroceda en una posición con respecto al último commit. En caso de querer retroceder más, simplemente cambia el número por la cantidad de posiciones 
-que se desea retroceder.
-
+HEAD~1 significa que retroceda en una posición con respecto al último commit. En caso de querer retroceder más, simplemente cambia el número por la cantidad de posiciones que se desea retroceder.
 
 
 ***************** Deshacer un commit público *****************
@@ -355,8 +352,115 @@ que se desea eliminar.
 Esto para evitar conflictos con cualquier otra persona que trabaje en el repositorio. 
 Pues de esta forma, los cambios deshechos se obtienen como cualquier otro commit haciendo git pull.
 
-Otra ventaja que tiene git revert con respecto a git  reset es que se puede deshacer un commit en particular sin tener que eliminar los commit que ocurrieron 
+Otra ventaja que tiene git revert con respecto a git reset es que se puede deshacer un commit en particular sin tener que eliminar los commit que ocurrieron 
 después del commit deseado, haciendo:
 
 git revert <commit>
 donde commit es el hash SHA-1 que lo identifica, el cual se puede obtener haciendo git log y buscando el commit a eliminar.
+
+*******************************************************
+
+HISTORICO DE CAMBIOS
+git reflog
+
+------------------------------
+
+Deshacer el último commit (no publicado)
+Si quieres mantener los cambios:
+git reset --soft HEAD~1
+
+Si NO quieres mantener los cambios:
+git reset --hard HEAD~1
+
+-------------------------------
+
+Si quieres arreglar el último commit (y no has hecho push)
+
+Sólo quieres arreglar el mensaje que has usado para el último commit:
+git commit --amend -m "Este es el mensaje correcto"
+
+Quieres añadir más cambios al último commit:
+git add src/archivo-con-cambios.js
+git commit --amend -m "Mensaje del commit"
+
+El parámetro de --amend es muy útil pero sólo funciona con el último commit y siempre y cuando NO esté publicado. Si ya has hecho push de ese commit, esto no va a funcionar. Deberías hacer un git revert en su lugar.
+
+----------------------------
+
+Deshacer un commit (ya publicado)
+
+git revert 74a1092
+
+------------------------------------------
+
+ELIMINAR UN COMMIT ESPECIFICO
+
+git rebase -i {id del commit anterior al que queremos eliminar}
+
+Hacer push a la rama
+git push origin 2 --force
+
+-------------------------------------
+
+Eliminar el commit del historial
+
+git reset --hard <commit>
+
+Si lo que deseas es eliminar el commit, pero mantener los cambios que se introdujeron , entonces ejecuta :
+
+git reset <commit>
+
+--------------------------------
+
+Eliminar un commit intermedio
+
+Paso 1: Encontrar el commit justo anterior al commit que queremos borrar.
+Paso 2: Hacemos un «checkout» de ese commit con el comando:
+git checkout <commit hash>
+Paso 3: Creamos una nueva rama utilizando nuestra posición actual:
+git checkout -b <nueva branch>
+Paso 4: Ahora tenemos que añadir el commit siguiente al commit que queremos borrar, para ello utilizamos el comando «cherry-pick»:
+git cherry-pick <commit hash>
+Paso 5: Repetimos el paso 4 para todos los commits que queremos mantener.
+Paso 6: Volvemos a la branch original que queríamos arreglar:
+git checkout <branch original>
+Paso 7: Ahora hacemos un «hard reset» sobre la branch original al commit anterior al que queríamos borrar:
+git reset --hard <commit hash>
+Paso 8: Hacemos un merge con la branch que hemos creado para borrar los commits:
+git merge <nueva branch>
+Paso 9: Hacemos un push al repositorio.
+git push --force origin <branch original>
+
+
+-------------------------- MODIFICAR EL ULTIMO COMMIT -------------
+git add *
+git commit --amend                             ---- abre el editor
+git commit --amend -m "nuevo mensaje"          ---- modifica mensaje
+git commit --amend --no-edit                   ---- si no quieres modificar nada mas
+git push
+
+-----------------------------------------------------------
+
+
+Si queremos evitar que git guarde automáticamente el usuario y contraseña de los repositorios que tengamos configurados en nuestro equipo
+Le estamos diciendo a git que deshabilite el helper que evita introducir la contraseña cada vez que ejecutamos estas instrucciones.De esta manera, cada vez que hagamos pull o push de algún repositorio, se nos pedirá la contraseña.
+
+git config --global --unset credential.helper
+
+Este comando almacena en caché las credenciales en la memoria para que las utilicen futuros programas de Git
+
+git config --global credential.helper cache
+
+----------------------------------------------
+
+Para ver servidores, ramas, asociaciones
+
+git remote show origin
+
+-------------------------------
+
+Para ver las relaciones de ramas
+
+git branch -vv
+
+
