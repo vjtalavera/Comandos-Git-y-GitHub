@@ -466,8 +466,11 @@ git branch -vv
 ------------------------------ comandos para ver estados
 <br>
 git fetch -v        y git fetch -vv
+<br>
 git branch -vv      y git branch -v y git branch -a (ver todas las ramas)
+<br>
 git remote show origin
+<br>
 git pull -v
 
 ------------------------------
