@@ -22,6 +22,8 @@ git add .             -- preparar los archivos para hacer seguimiento
 
 git reset archivo     -- saca al archivo del stage
 
+git config core.autocrlf false ------ caracter CRLF
+
 git clean -n          -- para ver una prueba de la ejecucion
 git clean -f          -- para forzar la eliminación de archivos sin seguimiento
 git clean -f -d       -- para forzar la eliminación de directorios sin seguimiento;
